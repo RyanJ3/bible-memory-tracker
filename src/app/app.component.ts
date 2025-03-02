@@ -1,12 +1,20 @@
+// app.component.ts - Root application component
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {BibleTrackerComponent} from './bible-tracker/bible-tracker.component';
 
+// app.component.ts
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  template: `
+    <div class="app-container">
+      <app-bible-tracker></app-bible-tracker>
+    </div>
+  `,
+  imports: [
+    BibleTrackerComponent
+  ],
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'bible-app';
+  title = 'Bible Memorization Tracker';
 }
