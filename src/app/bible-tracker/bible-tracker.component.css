@@ -1,0 +1,120 @@
+/* bible-tracker.component.css */
+
+/* Additional color variables */
+:root {
+  /* Existing colors... */
+
+  /* New gradient colors */
+  --gradient-primary: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+  --gradient-success: linear-gradient(135deg, var(--green-500), var(--green-600));
+  --box-shadow-fancy: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+/* Enhanced container styling */
+.p-4 {
+  padding: 1.5rem;
+}
+
+.max-w-6xl {
+  max-width: 72rem;
+  margin: 2rem auto;
+}
+
+/* Card enhancements */
+.bg-white {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: var(--box-shadow-fancy);
+  transition: var(--transition-smooth);
+}
+
+.bg-white:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Button enhancements */
+button {
+  transition: var(--transition-smooth);
+  border: none;
+  outline: none;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* Testament selector buttons */
+.testament-button {
+  background: var(--gradient-primary);
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+}
+
+.testament-button:hover {
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+
+/* Progress indicators */
+.progress-bar {
+  height: 8px;
+  background: var(--gray-100);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-success);
+  transition: width 0.3s ease;
+}
+
+/* Stats display */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: var(--box-shadow-fancy);
+  text-align: center;
+}
+
+/* Reset button styling */
+.reset-button {
+  background: linear-gradient(135deg, var(--red-500), var(--red-600));
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+}
+
+.reset-button:hover {
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
