@@ -110,7 +110,7 @@ export const BIBLE_DATA: { [key: string]: BibleBook } = {
   John: new BibleBook("New Testament", "John", "Gospels", [51, 25, 36, 54, 47, 71, 53, 59, 41, 42, 57, 50, 38, 31, 27, 33, 26, 40, 42, 31, 25], 43, ["Protestant", "Catholic", "Orthodox"]),
 
   // Historical Book (1 book)
-  Acts: new BibleBook("New Testament", "Acts", "Historical", [26, 47, 26, 37, 42, 15, 60, 40, 43, 48, 30, 25, 52, 28, 41, 40, 34, 28, 41, 38, 40, 30, 35, 27, 27, 32, 44, 31], 44, ["Protestant", "Catholic", "Orthodox"]),
+  Acts: new BibleBook("New Testament", "Acts", "Modern Historical", [26, 47, 26, 37, 42, 15, 60, 40, 43, 48, 30, 25, 52, 28, 41, 40, 34, 28, 41, 38, 40, 30, 35, 27, 27, 32, 44, 31], 44, ["Protestant", "Catholic", "Orthodox"]),
 
   // Pauline Epistles (13 books)
   Romans: new BibleBook("New Testament", "Romans", "Pauline Epistles", [32, 29, 31, 25, 21, 23, 25, 39, 33, 21, 36, 21, 14, 23, 33, 27], 45, ["Protestant", "Catholic", "Orthodox"]),
