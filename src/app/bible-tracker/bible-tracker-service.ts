@@ -1,8 +1,8 @@
 // bible-tracker.service.ts - Service for managing Bible memorization data with backend simulation
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, from, of } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
-import { BibleBook, ChapterProgress, BookProgress, GroupStats, BookStats, BIBLE_DATA } from './models';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable, from, of} from 'rxjs';
+import {delay, tap} from 'rxjs/operators';
+import {BibleBook, ChapterProgress, BookProgress, GroupStats, BookStats, BIBLE_DATA} from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -134,21 +134,42 @@ export class BibleTrackerService {
     return [...new Set(Object.values(BIBLE_DATA).map(book => book.testament))].sort();
   }
 
-  public getGroupsInTestament(testament: string): string[] {
-    return [...new Set(
-      Object.values(BIBLE_DATA)
-        .filter(book => book.testament === testament)
-        .map(book => book.group)
-    )].sort();
-  }
-
+  // Update the getBooksInGroup method in bible-tracker-service.ts
   public getBooksInGroup(group: string): { [key: string]: BibleBook } {
-    return Object.entries(BIBLE_DATA)
+    const booksInGroup = Object.entries(BIBLE_DATA)
       .filter(([_, book]) => book.group === group)
+      .sort((a, b) => a[1].order - b[1].order) // Sort by canonical order
       .reduce((acc, [name, book]) => {
         acc[name] = book;
         return acc;
       }, {} as { [key: string]: BibleBook });
+
+    return booksInGroup;
+  }
+
+// Similarly, update the getGroupsInTestament method to ensure groups appear in a logical order
+  public getGroupsInTestament(testament: string): string[] {
+    // Define the order of groups within each testament
+    const groupOrder: { [key: string]: string[] } = {
+      "Old Testament": ["Torah", "Historical", "Wisdom", "Prophets", "Deuterocanonical"],
+      "New Testament": ["Gospels", "Modern Historical", "Pauline Epistles", "General Epistles", "Apocalyptic"]
+    };
+
+    // Get all groups in this testament
+    const groups = [...new Set(
+      Object.values(BIBLE_DATA)
+        .filter(book => book.testament === testament)
+        .map(book => book.group)
+    )];
+
+    // Sort groups according to the defined order
+    const orderedGroups = groups.sort((a, b) => {
+      const orderA = groupOrder[testament]?.indexOf(a) ?? 999;
+      const orderB = groupOrder[testament]?.indexOf(b) ?? 999;
+      return orderA - orderB;
+    });
+
+    return orderedGroups;
   }
 
   public calculateGroupStats(group: string): GroupStats {
@@ -240,7 +261,7 @@ export class BibleTrackerService {
     if (!book) return;
 
     const maxVerses = book.chapters[chapterIndex];
-    const currentProgress = { ...this.progressSubject.value };
+    const currentProgress = {...this.progressSubject.value};
 
     // Ensure the book entry exists
     if (!currentProgress[bookName]) {
@@ -281,7 +302,7 @@ export class BibleTrackerService {
     const book = BIBLE_DATA[bookName];
     if (!book) return;
 
-    const currentProgress = { ...this.progressSubject.value };
+    const currentProgress = {...this.progressSubject.value};
 
     // Handle case where book or chapter doesn't exist yet
     if (!currentProgress[bookName] || !currentProgress[bookName][chapterIndex]) {
@@ -307,7 +328,7 @@ export class BibleTrackerService {
     const book = BIBLE_DATA[bookName];
     if (!book) return;
 
-    const currentProgress = { ...this.progressSubject.value };
+    const currentProgress = {...this.progressSubject.value};
 
     // Ensure the book entry exists
     if (!currentProgress[bookName]) {
@@ -344,7 +365,7 @@ export class BibleTrackerService {
     const book = BIBLE_DATA[bookName];
     if (!book) return;
 
-    const currentProgress = { ...this.progressSubject.value };
+    const currentProgress = {...this.progressSubject.value};
 
     // Ensure the book entry exists
     if (!currentProgress[bookName]) {
@@ -371,7 +392,7 @@ export class BibleTrackerService {
     const book = BIBLE_DATA[bookName];
     if (!book) return;
 
-    const currentProgress = { ...this.progressSubject.value };
+    const currentProgress = {...this.progressSubject.value};
     currentProgress[bookName] = Array(book.totalChapters).fill(null).map((_, i) => ({
       chapter: i + 1,
       memorizedVerses: 0,
@@ -384,7 +405,7 @@ export class BibleTrackerService {
   }
 
   public resetGroup(group: string): void {
-    const currentProgress = { ...this.progressSubject.value };
+    const currentProgress = {...this.progressSubject.value};
 
     Object.entries(BIBLE_DATA)
       .filter(([_, book]) => book.group === group)
@@ -402,7 +423,7 @@ export class BibleTrackerService {
   }
 
   public resetTestament(testament: string): void {
-    const currentProgress = { ...this.progressSubject.value };
+    const currentProgress = {...this.progressSubject.value};
 
     Object.entries(BIBLE_DATA)
       .filter(([_, book]) => book.testament === testament)

@@ -138,18 +138,7 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
     }
   }
 
-  onGroupChange(group: string): void {
-    this.selectedGroup = group;
 
-    // Get books in this group
-    this.booksInGroup = this.bibleTrackerService.getBooksInGroup(group);
-
-    // Select first book in the group
-    const bookNames = Object.keys(this.booksInGroup);
-    if (bookNames.length > 0) {
-      this.onBookChange(bookNames[0]);
-    }
-  }
 
   onBookChange(bookName: string): void {
     this.selectedBook = bookName;
@@ -209,5 +198,21 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
 
   trackByFn(index: number): number {
     return index;
+  }
+
+  onGroupChange(group: string): void {
+    this.selectedGroup = group;
+
+    // Get books in this group
+    this.booksInGroup = this.bibleTrackerService.getBooksInGroup(group);
+
+    // Select first book in the group by canonical order, not alphabetically
+    const bookNames = Object.entries(this.booksInGroup)
+        .sort((a, b) => a[1].order - b[1].order)
+        .map(([name, _]) => name);
+
+    if (bookNames.length > 0) {
+      this.onBookChange(bookNames[0]);
+    }
   }
 }
