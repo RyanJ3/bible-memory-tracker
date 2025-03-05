@@ -1,5 +1,5 @@
 // components/total-stats.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BibleTrackerService } from '../bible-tracker-service';
 import { Subject } from 'rxjs';
@@ -68,7 +68,7 @@ import { BIBLE_DATA } from '../models';
       <div class="mt-4">
         <h3 class="text-sm font-medium text-gray-700 mb-2">Testament Progress</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-amber-50 border border-amber-100 rounded-lg p-3">
+          <button (click)="selectTestament('Old Testament')" class="bg-amber-50 border border-amber-100 hover:bg-amber-100 transition-colors duration-200 rounded-lg p-3 text-left cursor-pointer">
             <div class="flex justify-between mb-1">
               <span class="text-sm font-medium text-amber-800">Old Testament</span>
               <span class="text-xs px-2 py-1 bg-amber-200 text-amber-800 rounded-full">{{ oldTestamentPercent }}%</span>
@@ -76,9 +76,12 @@ import { BIBLE_DATA } from '../models';
             <div class="w-full bg-gray-200 rounded-full h-2">
               <div class="bg-amber-500 h-2 rounded-full" [style.width.%]="oldTestamentPercent"></div>
             </div>
-          </div>
+            <div class="flex justify-end mt-2">
+              <span class="text-xs text-amber-800">Click to view</span>
+            </div>
+          </button>
 
-          <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-3">
+          <button (click)="selectTestament('New Testament')" class="bg-indigo-50 border border-indigo-100 hover:bg-indigo-100 transition-colors duration-200 rounded-lg p-3 text-left cursor-pointer">
             <div class="flex justify-between mb-1">
               <span class="text-sm font-medium text-indigo-800">New Testament</span>
               <span class="text-xs px-2 py-1 bg-indigo-200 text-indigo-800 rounded-full">{{ newTestamentPercent }}%</span>
@@ -86,7 +89,10 @@ import { BIBLE_DATA } from '../models';
             <div class="w-full bg-gray-200 rounded-full h-2">
               <div class="bg-indigo-500 h-2 rounded-full" [style.width.%]="newTestamentPercent"></div>
             </div>
-          </div>
+            <div class="flex justify-end mt-2">
+              <span class="text-xs text-indigo-800">Click to view</span>
+            </div>
+          </button>
         </div>
       </div>
     </div>
@@ -111,6 +117,9 @@ export class TotalStatsComponent implements OnInit, OnDestroy {
   // Testament stats
   oldTestamentPercent: number = 0;
   newTestamentPercent: number = 0;
+
+  // Event emitter for testament selection
+  @Output() testamentSelected = new EventEmitter<string>();
 
   private destroy$ = new Subject<void>();
 
@@ -150,6 +159,14 @@ export class TotalStatsComponent implements OnInit, OnDestroy {
 
     this.totalBibleVerses = totalVerses;
     this.totalBibleChapters = totalChapters;
+  }
+
+  /**
+   * Handles testament selection from the UI and emits an event to the parent component
+   * @param testament The selected testament ('Old Testament' or 'New Testament')
+   */
+  selectTestament(testament: string): void {
+    this.testamentSelected.emit(testament);
   }
 
   private updateStatistics(): void {
