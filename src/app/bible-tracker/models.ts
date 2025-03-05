@@ -26,13 +26,16 @@ export class BibleBook {
   }
 }
 
+// models.ts - update the ChapterProgress interface
 export interface ChapterProgress {
   chapter: number;
-  memorizedVerses: number;
+  memorizedVerses: number; // Keep for backward compatibility
   inProgress: boolean;
   completed: boolean;
+  versesMemorized: boolean[]; // Boolean array where each index represents a verse
 }
 
+// Keep other interfaces the same
 export interface BookProgress {
   [key: string]: ChapterProgress[];
 }

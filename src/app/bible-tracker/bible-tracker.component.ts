@@ -56,17 +56,19 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
 
   constructor(private bibleTrackerService: BibleTrackerService) { }
 
+// Update selection methods
   ngOnInit(): void {
     // Get testaments
     this.testaments = this.bibleTrackerService.getTestaments();
 
     // Subscribe to progress changes
     this.bibleTrackerService.progress$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(progress => {
-        this.progress = progress;
-        this.updateSelections();
-      });
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(progress => {
+          this.progress = progress;
+          this.updateSelections();
+          this.updateBookStatistics();
+        });
 
     // Set initial selections
     this.onTestamentChange(this.selectedTestament);
@@ -95,6 +97,7 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
         chapter: i + 1,
         memorizedVerses: 0,
         inProgress: false,
+        versesMemorized: [false, true, false, true],
         completed: false
       }));
     } else {
@@ -215,4 +218,28 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
       this.onBookChange(bookNames[0]);
     }
   }
+
+// Add to bible-tracker.component.ts
+  updateMemorizedVerses(selectedVerses: number[]): void {
+    this.bibleTrackerService.updateMemorizedVerses(
+        this.selectedBook,
+        this.selectedChapterIndex,
+        selectedVerses
+    );
+
+    // Force an immediate update of book statistics
+    this.updateBookStatistics();
+  }
+
+// Add helper method to update book statistics
+  private updateBookStatistics(): void {
+    if (this.currentBook) {
+      const stats = this.bibleTrackerService.calculateBookStats(this.selectedBook);
+      this.memorizedVerses = stats.memorizedVerses;
+      this.totalVerses = stats.totalVerses;
+      this.completedChapters = stats.completedChapters;
+      this.inProgressChapters = stats.inProgressChapters;
+    }
+  }
+
 }

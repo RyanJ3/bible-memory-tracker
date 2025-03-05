@@ -1,4 +1,4 @@
-// bible-tracker.module.ts - Module for Bible Memorization Tracker
+// bible-tracker.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +8,8 @@ import { BookSelectorComponent } from './components/book-selector.component';
 import { BookInfoComponent } from './components/book-info.component';
 import { ChapterSelectorComponent } from './components/chapter-selector.component';
 import { ChapterProgressComponent } from './components/chapter-progress.component';
-import {TestamentSelectorComponent} from './components/testament-selector.component';
+import { TestamentSelectorComponent } from './components/testament-selector.component';
+import { VerseSelectorComponent } from './components/verse-selector.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {TestamentSelectorComponent} from './components/testament-selector.compon
     FormsModule,
     TestamentSelectorComponent,
     GroupSelectorComponent,
-    BookSelectorComponent
+    BookSelectorComponent,
+    VerseSelectorComponent
   ],
   exports: [
     BibleTrackerComponent

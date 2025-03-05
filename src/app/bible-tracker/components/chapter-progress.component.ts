@@ -1,11 +1,13 @@
-// components/chapter-progress.component.ts - Component for displaying and modifying chapter progress
+// components/chapter-progress.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BibleBook, ChapterProgress } from '../models';
-import {NgClass, NgIf} from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
+import { VerseSelectorComponent } from './verse-selector.component';
 
 @Component({
   selector: 'app-chapter-progress',
   imports: [
+    VerseSelectorComponent,
     NgClass,
     NgIf
   ],
@@ -14,7 +16,7 @@ import {NgClass, NgIf} from '@angular/common';
          class="bg-white border rounded p-4 shadow-sm">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold">
-          {{ currentBook.bookName }} {{ selectedChapter }}
+          {{ currentBook?.bookName }} {{ selectedChapter }}
           <span *ngIf="chapterProgress?.completed" class="ml-2 text-sm bg-green-100 text-green-800 px-2 py-1 rounded">
             Completed
           </span>
@@ -24,7 +26,7 @@ import {NgClass, NgIf} from '@angular/common';
           </span>
         </h3>
         <span class="text-gray-600">
-          {{ chapterProgress?.memorizedVerses || 0 }} / {{ totalVerses }} verses
+          {{ memorizedCount }} / {{ totalVerses }} verses
         </span>
       </div>
 
@@ -32,9 +34,9 @@ import {NgClass, NgIf} from '@angular/common';
       <div class="mb-4">
         <div class="flex flex-col space-y-1">
           <p class="text-sm text-gray-600">Total verses: {{ totalVerses }}</p>
-          <p class="text-sm text-gray-600">Memorized: {{ chapterProgress?.memorizedVerses || 0 }}</p>
+          <p class="text-sm text-gray-600">Memorized: {{ memorizedCount }}</p>
           <p class="text-sm text-gray-600">
-            Remaining: {{ totalVerses - (chapterProgress?.memorizedVerses || 0) }}
+            Remaining: {{ totalVerses - memorizedCount }}
           </p>
           <p class="text-sm text-gray-600">
             Progress: {{ progressPercent }}%
@@ -55,38 +57,25 @@ import {NgClass, NgIf} from '@angular/common';
         </div>
       </div>
 
-      <!-- Slider for Verse Progress -->
-      <div class="mb-4 space-y-2">
-        <div class="flex justify-between items-center">
-          <span class="text-sm font-medium text-gray-700">
-            Verses Memorized: {{ chapterProgress?.memorizedVerses || 0 }}
-          </span>
-          <span class="text-sm text-gray-500">
-            Total: {{ totalVerses }}
-          </span>
-        </div>
-        <input
-          type="range"
-          min="0"
-          [max]="totalVerses"
-          [value]="chapterProgress?.memorizedVerses || 0"
-          (input)="onSliderChange($event)"
-          class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-        />
-      </div>
+      <!-- Verse Selector Component -->
+      <app-verse-selector
+        [totalVerses]="totalVerses"
+        [versesMemorized]="chapterProgress?.versesMemorized || []"
+        (versesChange)="onVersesChange($event)"
+      ></app-verse-selector>
 
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-4 mt-6">
         <div class="flex space-x-2">
           <button
             (click)="decrementVerses()"
-            [disabled]="(chapterProgress?.memorizedVerses || 0) <= 0"
+            [disabled]="memorizedCount <= 0"
             class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-l disabled:opacity-50 font-bold"
           >
             -
           </button>
           <button
             (click)="incrementVerses()"
-            [disabled]="(chapterProgress?.memorizedVerses || 0) >= totalVerses"
+            [disabled]="memorizedCount >= totalVerses"
             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r disabled:opacity-50 font-bold"
           >
             +
@@ -110,7 +99,7 @@ export class ChapterProgressComponent {
 
   @Output() incrementVersesEvent = new EventEmitter<void>();
   @Output() decrementVersesEvent = new EventEmitter<void>();
-  @Output() updateProgress = new EventEmitter<number>();
+  @Output() updateProgress = new EventEmitter<number[]>();
   @Output() resetChapter = new EventEmitter<void>();
 
   get totalVerses(): number {
@@ -120,9 +109,13 @@ export class ChapterProgressComponent {
     return this.currentBook.chapters[this.selectedChapterIndex];
   }
 
+  get memorizedCount(): number {
+    return this.chapterProgress?.versesMemorized?.filter(v => v).length || 0;
+  }
+
   get progressPercent(): number {
     if (!this.totalVerses) return 0;
-    return Math.round(((this.chapterProgress?.memorizedVerses || 0) / this.totalVerses) * 100);
+    return Math.round((this.memorizedCount / this.totalVerses) * 100);
   }
 
   incrementVerses(): void {
@@ -133,9 +126,13 @@ export class ChapterProgressComponent {
     this.decrementVersesEvent.emit();
   }
 
-  onSliderChange(event: any): void {
-    const newValue = parseInt(event.target.value, 10);
-    this.updateProgress.emit(newValue);
+  onVersesChange(versesMemorized: boolean[]): void {
+    // Convert boolean array to list of verse numbers for API compatibility
+    const selectedVerses = versesMemorized
+      .map((isMemorized, index) => isMemorized ? index + 1 : null)
+      .filter(v => v !== null) as number[];
+
+    this.updateProgress.emit(selectedVerses);
   }
 
   onResetChapter(): void {
