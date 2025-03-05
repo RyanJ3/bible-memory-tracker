@@ -1,4 +1,4 @@
-// components/book-info.component.ts - Component for displaying book information and statistics
+// components/book-info.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BibleBook } from '../models';
 
@@ -31,21 +31,21 @@ import { BibleBook } from '../models';
           <p class="text-xl font-bold">{{ inProgressChapters }}</p>
         </div>
       </div>
-      
+
       <!-- Book progress bar -->
       <div class="mt-4">
         <div class="w-full bg-gray-200 rounded-full h-4">
-          <div 
-            class="bg-blue-600 h-4 rounded-full" 
-            [style.width.%]="percentComplete"
+          <div
+              class="bg-blue-600 h-4 rounded-full"
+              [style.width.%]="percentComplete"
           ></div>
         </div>
       </div>
-      
+
       <div class="mt-4 text-right">
-        <button 
-          (click)="onResetBook()"
-          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+        <button
+            (click)="onResetBook()"
+            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
         >
           Reset Book
         </button>
@@ -59,14 +59,14 @@ export class BookInfoComponent {
   @Input() totalVerses: number = 0;
   @Input() completedChapters: number = 0;
   @Input() inProgressChapters: number = 0;
-  
+
   @Output() resetBook = new EventEmitter<void>();
 
   get percentComplete(): number {
     if (!this.totalVerses) return 0;
     return Math.round((this.memorizedVerses / this.totalVerses) * 100);
   }
-  
+
   onResetBook(): void {
     if (confirm(`Are you sure you want to reset all progress for ${this.currentBook?.bookName}?`)) {
       this.resetBook.emit();
