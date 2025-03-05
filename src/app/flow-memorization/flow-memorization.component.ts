@@ -56,8 +56,14 @@ forever.`;
 
   // Initialize filter values for Testament, Group, Book, and Chapter selection
   initializeBibleFilters(): void {
-    // Get all testaments
-    this.testaments = [...new Set(Object.values(BIBLE_DATA).map(book => book.testament))].sort();
+    // Get all testaments and manually sort to put Old Testament first
+    const testamentSet = new Set(Object.values(BIBLE_DATA).map(book => book.testament));
+    this.testaments = Array.from(testamentSet).sort((a, b) => {
+      // Make sure Old Testament comes before New Testament
+      if (a.includes('Old') && b.includes('New')) return -1;
+      if (a.includes('New') && b.includes('Old')) return 1;
+      return a.localeCompare(b);
+    });
 
     // Initialize groups based on selected testament
     this.onTestamentChange();

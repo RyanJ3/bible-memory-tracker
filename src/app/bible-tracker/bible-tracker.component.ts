@@ -3,14 +3,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BibleBook, BookProgress, ChapterProgress, BIBLE_DATA } from './models';
-import {BibleTrackerService} from './bible-tracker-service';
-import {TestamentSelectorComponent} from './components/testament-selector.component';
-import {GroupSelectorComponent} from './components/group-selector.component';
-import {BookSelectorComponent} from './components/book-selector.component';
-import {BookInfoComponent} from './components/book-info.component';
-import {ChapterSelectorComponent} from './components/chapter-selector.component';
-import {ChapterProgressComponent} from './components/chapter-progress.component';
-import {BibleTrackerModule} from "./bible-tracker.module";
+import { BibleTrackerService } from './bible-tracker-service';
+import { TestamentSelectorComponent } from './components/testament-selector.component';
+import { GroupSelectorComponent } from './components/group-selector.component';
+import { BookSelectorComponent } from './components/book-selector.component';
+import { ChapterSelectorComponent } from './components/chapter-selector.component';
+import { ChapterProgressComponent } from './components/chapter-progress.component';
+import { BibleTrackerModule } from "./bible-tracker.module";
+import {BookInfoComponent} from "./components/book-info.component";
 
 @Component({
   selector: 'app-bible-tracker',
@@ -34,9 +34,9 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
   progress: BookProgress = {};
 
   // Selection state
-  selectedTestament: string = "New Testament";
-  selectedGroup: string = "Gospels";
-  selectedBook: string = 'John';
+  selectedTestament: string = "Old Testament";
+  selectedGroup: string = "Wisdom";
+  selectedBook: string = 'Psalms';
   selectedChapter: number = 1;
 
   // Current book data
@@ -125,8 +125,6 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   onBookChange(bookName: string): void {
     this.selectedBook = bookName;
     this.selectedChapter = 1;
@@ -203,7 +201,7 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
     }
   }
 
-// Add to bible-tracker.component.ts
+  // Add to bible-tracker.component.ts
   updateMemorizedVerses(selectedVerses: number[]): void {
     this.bibleTrackerService.updateMemorizedVerses(
         this.selectedBook,
@@ -215,7 +213,7 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
     this.updateBookStatistics();
   }
 
-// Add helper method to update book statistics
+  // Add helper method to update book statistics
   private updateBookStatistics(): void {
     if (this.currentBook) {
       const stats = this.bibleTrackerService.calculateBookStats(this.selectedBook);
@@ -226,10 +224,16 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
     }
   }
 
-// Update selection methods
+  // Update selection methods
   ngOnInit(): void {
-    // Get testaments
-    this.testaments = this.bibleTrackerService.getTestaments();
+    // Get testaments and sort them to put Old Testament first
+    this.testaments = this.bibleTrackerService.getTestaments()
+        .sort((a, b) => {
+          // Make sure Old Testament comes before New Testament
+          if (a.includes('Old') && b.includes('New')) return -1;
+          if (a.includes('New') && b.includes('Old')) return 1;
+          return a.localeCompare(b);
+        });
 
     // Subscribe to progress changes
     this.bibleTrackerService.progress$

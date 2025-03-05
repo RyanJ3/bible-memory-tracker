@@ -1,16 +1,18 @@
 // components/chapter-progress.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BibleBook, ChapterProgress } from '../models';
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { VerseSelectorComponent } from './verse-selector.component';
+import {ConfirmationModalComponent} from './confirmation-modal';
 
 @Component({
   selector: 'app-chapter-progress',
   standalone: true,
   imports: [
+    CommonModule,
     VerseSelectorComponent,
-    NgClass,
-    NgIf
+    ConfirmationModalComponent,
+    ConfirmationModalComponent
   ],
   template: `
     <div *ngIf="currentBook && selectedChapterIndex >= 0 && selectedChapterIndex < currentBook.chapters.length"
@@ -52,6 +54,16 @@ import { VerseSelectorComponent } from './verse-selector.component';
         (versesChange)="onVersesChange($event)"
       ></app-verse-selector>
     </div>
+
+    <!-- Confirmation Modal -->
+    <app-confirmation-modal
+      [isVisible]="isConfirmModalVisible"
+      [title]="'Reset Chapter'"
+      [message]="'Are you sure you want to reset progress for Chapter ' + selectedChapter + '? This action cannot be undone.'"
+      [confirmText]="'Reset'"
+      (confirm)="confirmReset()"
+      (cancel)="cancelReset()"
+    ></app-confirmation-modal>
   `,
   styles: [`
     .action-button {
@@ -105,6 +117,8 @@ export class ChapterProgressComponent {
   @Output() updateProgress = new EventEmitter<number[]>();
   @Output() resetChapter = new EventEmitter<void>();
 
+  isConfirmModalVisible: boolean = false;
+
   get totalVerses(): number {
     if (!this.currentBook || this.selectedChapterIndex < 0 || this.selectedChapterIndex >= this.currentBook.chapters.length) {
       return 0;
@@ -138,9 +152,16 @@ export class ChapterProgressComponent {
     this.updateProgress.emit(selectedVerses);
   }
 
-  onResetChapter(): void {
-    if (confirm(`Are you sure you want to reset progress for Chapter ${this.selectedChapter}?`)) {
-      this.resetChapter.emit();
-    }
+  showConfirmModal(): void {
+    this.isConfirmModalVisible = true;
+  }
+
+  confirmReset(): void {
+    this.resetChapter.emit();
+    this.isConfirmModalVisible = false;
+  }
+
+  cancelReset(): void {
+    this.isConfirmModalVisible = false;
   }
 }

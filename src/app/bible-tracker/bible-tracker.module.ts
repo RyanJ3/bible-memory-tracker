@@ -10,10 +10,11 @@ import { ChapterSelectorComponent } from './components/chapter-selector.componen
 import { ChapterProgressComponent } from './components/chapter-progress.component';
 import { TestamentSelectorComponent } from './components/testament-selector.component';
 import { VerseSelectorComponent } from './components/verse-selector.component';
+import {ConfirmationModalComponent} from "./components/confirmation-modal";
 
 @NgModule({
   declarations: [
-
+    // No declarations as all components are standalone
   ],
   imports: [
     CommonModule,
@@ -25,7 +26,8 @@ import { VerseSelectorComponent } from './components/verse-selector.component';
     BibleTrackerComponent,
     BookInfoComponent,
     ChapterProgressComponent,
-    ChapterSelectorComponent
+    ChapterSelectorComponent,
+    ConfirmationModalComponent
   ],
   exports: [
     BibleTrackerComponent
