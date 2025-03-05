@@ -1,4 +1,4 @@
-// components/chapter-progress.component.ts - Updated with shared button styles
+// components/chapter-progress.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BibleBook, ChapterProgress } from '../models';
 import { NgClass, NgIf } from '@angular/common';
@@ -43,19 +43,6 @@ import { VerseSelectorComponent } from './verse-selector.component';
             Progress: {{ progressPercent }}%
           </p>
         </div>
-
-        <!-- Progress Bar -->
-        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-          <div
-            class="h-2 rounded-full"
-            [ngClass]="{
-              'bg-green-600': chapterProgress?.completed,
-              'bg-blue-500': !chapterProgress?.completed && chapterProgress?.inProgress,
-              'bg-gray-200': !chapterProgress?.inProgress
-            }"
-            [style.width.%]="progressPercent"
-          ></div>
-        </div>
       </div>
 
       <!-- Verse Selector Component -->
@@ -64,32 +51,48 @@ import { VerseSelectorComponent } from './verse-selector.component';
         [versesMemorized]="chapterProgress?.versesMemorized || []"
         (versesChange)="onVersesChange($event)"
       ></app-verse-selector>
-
-      <div class="flex justify-between mt-6">
-        <div>
-          <button
-            (click)="incrementVerses()"
-            class="action-button primary mr-2"
-          >
-            + Add Verse
-          </button>
-          <button
-            (click)="decrementVerses()"
-            class="action-button secondary"
-          >
-            - Remove Verse
-          </button>
-        </div>
-        <button
-          (click)="onResetChapter()"
-          class="action-button danger"
-        >
-          Reset Chapter
-        </button>
-      </div>
     </div>
   `,
-  styleUrls: ['../shared-bubble-styles.scss']
+  styles: [`
+    .action-button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .action-button.primary {
+      background-color: rgba(59, 130, 246, 1);
+      color: white;
+    }
+
+    .action-button.primary:hover {
+      background-color: rgba(37, 99, 235, 1);
+    }
+
+    .action-button.secondary {
+      background-color: rgba(156, 163, 175, 1);
+      color: white;
+    }
+
+    .action-button.secondary:hover {
+      background-color: rgba(107, 114, 128, 1);
+    }
+
+    .action-button.danger {
+      background-color: rgba(239, 68, 68, 1);
+      color: white;
+    }
+
+    .action-button.danger:hover {
+      background-color: rgba(220, 38, 38, 1);
+    }
+
+    .mr-2 {
+      margin-right: 0.5rem;
+    }
+  `]
 })
 export class ChapterProgressComponent {
   @Input() currentBook: BibleBook | null = null;

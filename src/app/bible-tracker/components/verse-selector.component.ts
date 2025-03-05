@@ -11,17 +11,10 @@ import { NgClass, NgFor } from '@angular/common';
   ],
   template: `
     <div class="mt-4">
-      <h4 class="text-md font-medium mb-2">Verses</h4>
-
       <!-- Progress Bar -->
       <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
         <div
-          class="h-2 rounded-full"
-          [ngClass]="{
-            'bg-green-600': progressPercent === 100,
-            'bg-blue-500': progressPercent > 0 && progressPercent < 100,
-            'bg-gray-200': progressPercent === 0
-          }"
+          class="h-2 rounded-full bg-blue-500"
           [style.width.%]="progressPercent"
         ></div>
       </div>
