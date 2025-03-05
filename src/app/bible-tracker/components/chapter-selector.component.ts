@@ -1,11 +1,12 @@
-// components/chapter-selector.component.ts - Component for selecting Bible chapter
+// components/chapter-selector.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ChapterProgress } from '../models';
-import {FormsModule} from '@angular/forms';
-import {NgClass, NgForOf} from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgClass, NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-chapter-selector',
+  standalone: true,
   imports: [
     FormsModule,
     NgClass,
@@ -39,16 +40,16 @@ import {NgClass, NgForOf} from '@angular/common';
         <!-- Chapter Overview -->
         <div class="mb-3">
           <p class="text-sm text-gray-500 mb-2">Quick Overview:</p>
-          <div class="flex flex-wrap gap-2">
+          <div class="bubbles-container">
             <button
               *ngFor="let chapter of currentBookProgress; trackBy: trackByFn"
               (click)="selectChapter(chapter.chapter)"
-              class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium hover:opacity-80"
+              class="chapter-bubble"
               [ngClass]="{
-                'bg-gray-200 text-gray-800': !chapter.inProgress && !chapter.completed,
-                'bg-blue-100 text-blue-800': chapter.inProgress && !chapter.completed,
-                'bg-green-100 text-green-800': chapter.completed,
-                'ring-2 ring-blue-500': chapter.chapter === selectedChapter
+                'not-started': !chapter.inProgress && !chapter.completed,
+                'in-progress': chapter.inProgress && !chapter.completed,
+                'completed': chapter.completed,
+                'selected': chapter.chapter === selectedChapter
               }"
             >
               {{ chapter.chapter }}
@@ -57,7 +58,61 @@ import {NgClass, NgForOf} from '@angular/common';
         </div>
       </div>
     </div>
-  `
+  `,
+  styles: [`
+    .chapter-bubble {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chapter-bubble:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .chapter-bubble.not-started {
+      background-color: #d1d5db; /* bg-gray-200 */
+      color: #1f2937; /* text-gray-800 */
+    }
+
+    .chapter-bubble.in-progress {
+      background-color: #dbeafe; /* bg-blue-100 */
+      color: #1e40af; /* text-blue-800 */
+    }
+
+    .chapter-bubble.completed {
+      background-color: #dcfce7; /* bg-green-100 */
+      color: #166534; /* text-green-800 */
+    }
+
+    .chapter-bubble.selected {
+      box-shadow: 0 0 0 2px #3b82f6; /* ring-2 ring-blue-500 */
+    }
+
+    .bubbles-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      background-color: rgba(249, 250, 251, 1);
+    }
+
+    @media (min-width: 768px) {
+      .bubbles-container {
+        gap: 0.75rem;
+      }
+    }
+  `]
 })
 export class ChapterSelectorComponent {
   @Input() currentBookProgress: ChapterProgress[] = [];

@@ -1,9 +1,13 @@
 // components/book-info.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BibleBook } from '../models';
+import { NgIf } from '@angular/common';
+import {ConfirmationModalComponent} from "./confirmation-modal";
 
 @Component({
   selector: 'app-book-info',
+  standalone: true,
+  imports: [ConfirmationModalComponent, ConfirmationModalComponent, ConfirmationModalComponent],
   template: `
     <div class="mb-6 bg-blue-50 p-4 rounded-lg">
       <div class="flex justify-between items-center mb-2">
@@ -44,13 +48,23 @@ import { BibleBook } from '../models';
 
       <div class="mt-4 text-right">
         <button
-            (click)="onResetBook()"
+            (click)="showConfirmModal()"
             class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
         >
           Reset Book
         </button>
       </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    <app-confirmation-modal
+        [isVisible]="isConfirmModalVisible"
+        [title]="'Reset Book'"
+        [message]="'Are you sure you want to reset all progress for ' + (currentBook?.bookName || '') + '? This action cannot be undone.'"
+        [confirmText]="'Reset'"
+        (confirm)="confirmReset()"
+        (cancel)="cancelReset()"
+    ></app-confirmation-modal>
   `
 })
 export class BookInfoComponent {
@@ -62,14 +76,23 @@ export class BookInfoComponent {
 
   @Output() resetBook = new EventEmitter<void>();
 
+  isConfirmModalVisible: boolean = false;
+
   get percentComplete(): number {
     if (!this.totalVerses) return 0;
     return Math.round((this.memorizedVerses / this.totalVerses) * 100);
   }
 
-  onResetBook(): void {
-    if (confirm(`Are you sure you want to reset all progress for ${this.currentBook?.bookName}?`)) {
-      this.resetBook.emit();
-    }
+  showConfirmModal(): void {
+    this.isConfirmModalVisible = true;
+  }
+
+  confirmReset(): void {
+    this.resetBook.emit();
+    this.isConfirmModalVisible = false;
+  }
+
+  cancelReset(): void {
+    this.isConfirmModalVisible = false;
   }
 }

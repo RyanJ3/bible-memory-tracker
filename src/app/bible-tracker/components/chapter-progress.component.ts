@@ -1,15 +1,18 @@
 // components/chapter-progress.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BibleBook, ChapterProgress } from '../models';
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { VerseSelectorComponent } from './verse-selector.component';
+import {ConfirmationModalComponent} from './confirmation-modal';
 
 @Component({
   selector: 'app-chapter-progress',
+  standalone: true,
   imports: [
+    CommonModule,
     VerseSelectorComponent,
-    NgClass,
-    NgIf
+    ConfirmationModalComponent,
+    ConfirmationModalComponent
   ],
   template: `
     <div *ngIf="currentBook && selectedChapterIndex >= 0 && selectedChapterIndex < currentBook.chapters.length"
@@ -42,19 +45,6 @@ import { VerseSelectorComponent } from './verse-selector.component';
             Progress: {{ progressPercent }}%
           </p>
         </div>
-
-        <!-- Progress Bar -->
-        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-          <div
-            class="h-2 rounded-full"
-            [ngClass]="{
-              'bg-green-600': chapterProgress?.completed,
-              'bg-blue-500': !chapterProgress?.completed && chapterProgress?.inProgress,
-              'bg-gray-200': !chapterProgress?.inProgress
-            }"
-            [style.width.%]="progressPercent"
-          ></div>
-        </div>
       </div>
 
       <!-- Verse Selector Component -->
@@ -63,33 +53,58 @@ import { VerseSelectorComponent } from './verse-selector.component';
         [versesMemorized]="chapterProgress?.versesMemorized || []"
         (versesChange)="onVersesChange($event)"
       ></app-verse-selector>
-
-      <div class="flex items-center space-x-4 mt-6">
-        <div class="flex space-x-2">
-          <button
-            (click)="decrementVerses()"
-            [disabled]="memorizedCount <= 0"
-            class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-l disabled:opacity-50 font-bold"
-          >
-            -
-          </button>
-          <button
-            (click)="incrementVerses()"
-            [disabled]="memorizedCount >= totalVerses"
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r disabled:opacity-50 font-bold"
-          >
-            +
-          </button>
-        </div>
-        <button
-          (click)="onResetChapter()"
-          class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded"
-        >
-          Reset Chapter
-        </button>
-      </div>
     </div>
-  `
+
+    <!-- Confirmation Modal -->
+    <app-confirmation-modal
+      [isVisible]="isConfirmModalVisible"
+      [title]="'Reset Chapter'"
+      [message]="'Are you sure you want to reset progress for Chapter ' + selectedChapter + '? This action cannot be undone.'"
+      [confirmText]="'Reset'"
+      (confirm)="confirmReset()"
+      (cancel)="cancelReset()"
+    ></app-confirmation-modal>
+  `,
+  styles: [`
+    .action-button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .action-button.primary {
+      background-color: rgba(59, 130, 246, 1);
+      color: white;
+    }
+
+    .action-button.primary:hover {
+      background-color: rgba(37, 99, 235, 1);
+    }
+
+    .action-button.secondary {
+      background-color: rgba(156, 163, 175, 1);
+      color: white;
+    }
+
+    .action-button.secondary:hover {
+      background-color: rgba(107, 114, 128, 1);
+    }
+
+    .action-button.danger {
+      background-color: rgba(239, 68, 68, 1);
+      color: white;
+    }
+
+    .action-button.danger:hover {
+      background-color: rgba(220, 38, 38, 1);
+    }
+
+    .mr-2 {
+      margin-right: 0.5rem;
+    }
+  `]
 })
 export class ChapterProgressComponent {
   @Input() currentBook: BibleBook | null = null;
@@ -101,6 +116,8 @@ export class ChapterProgressComponent {
   @Output() decrementVersesEvent = new EventEmitter<void>();
   @Output() updateProgress = new EventEmitter<number[]>();
   @Output() resetChapter = new EventEmitter<void>();
+
+  isConfirmModalVisible: boolean = false;
 
   get totalVerses(): number {
     if (!this.currentBook || this.selectedChapterIndex < 0 || this.selectedChapterIndex >= this.currentBook.chapters.length) {
@@ -135,9 +152,16 @@ export class ChapterProgressComponent {
     this.updateProgress.emit(selectedVerses);
   }
 
-  onResetChapter(): void {
-    if (confirm(`Are you sure you want to reset progress for Chapter ${this.selectedChapter}?`)) {
-      this.resetChapter.emit();
-    }
+  showConfirmModal(): void {
+    this.isConfirmModalVisible = true;
+  }
+
+  confirmReset(): void {
+    this.resetChapter.emit();
+    this.isConfirmModalVisible = false;
+  }
+
+  cancelReset(): void {
+    this.isConfirmModalVisible = false;
   }
 }

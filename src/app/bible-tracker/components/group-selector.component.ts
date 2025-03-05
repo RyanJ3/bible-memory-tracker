@@ -1,14 +1,13 @@
-// components/group-selector.component.ts - Component for selecting book group
+// components/group-selector.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {NgClass, NgForOf} from '@angular/common';
-import {BibleTrackerService} from '../bible-tracker-service';
+import { CommonModule } from '@angular/common';
+import { BibleTrackerService } from '../bible-tracker-service';
+import {ConfirmationModalComponent} from "./confirmation-modal";
 
 @Component({
   selector: 'app-group-selector',
-  imports: [
-    NgClass,
-    NgForOf
-  ],
+  standalone: true,
+  imports: [CommonModule, ConfirmationModalComponent],
   template: `
     <div class="bg-white p-4 rounded shadow mb-6">
       <h3 class="text-lg font-semibold mb-2">Select Book Group</h3>
@@ -29,13 +28,23 @@ import {BibleTrackerService} from '../bible-tracker-service';
       </div>
       <div class="mt-4 text-right">
         <button
-          (click)="onResetGroup()"
+          (click)="showConfirmModal()"
           class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
         >
           Reset {{ selectedGroup }}
         </button>
       </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    <app-confirmation-modal
+      [isVisible]="isConfirmModalVisible"
+      [title]="'Reset Book Group'"
+      [message]="'Are you sure you want to reset all progress for ' + selectedGroup + ' books? This action cannot be undone.'"
+      [confirmText]="'Reset'"
+      (confirm)="confirmReset()"
+      (cancel)="cancelReset()"
+    ></app-confirmation-modal>
   `
 })
 export class GroupSelectorComponent {
@@ -45,16 +54,25 @@ export class GroupSelectorComponent {
   @Output() groupChange = new EventEmitter<string>();
   @Output() resetGroup = new EventEmitter<void>();
 
+  isConfirmModalVisible: boolean = false;
+
   constructor(private bibleTrackerService: BibleTrackerService) {}
 
   selectGroup(group: string): void {
     this.groupChange.emit(group);
   }
 
-  onResetGroup(): void {
-    if (confirm(`Are you sure you want to reset all progress for ${this.selectedGroup} books?`)) {
-      this.resetGroup.emit();
-    }
+  showConfirmModal(): void {
+    this.isConfirmModalVisible = true;
+  }
+
+  confirmReset(): void {
+    this.resetGroup.emit();
+    this.isConfirmModalVisible = false;
+  }
+
+  cancelReset(): void {
+    this.isConfirmModalVisible = false;
   }
 
   getGroupStats(group: string): { percentComplete: number, completedChapters: number, totalChapters: number } {
