@@ -1,6 +1,6 @@
 // components/verse-selector.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-verse-selector',
@@ -9,7 +9,6 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
     NgClass,
     NgFor
   ],
-  styleUrls: ['../shared-bubble-styles.scss'],
   template: `
     <div class="mt-4">
       <h4 class="text-md font-medium mb-2">Verses</h4>
@@ -28,11 +27,11 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
       </div>
 
       <!-- Verse bubbles -->
-      <div class="verse-container">
+      <div class="bubbles-container scrollable">
         <button
           *ngFor="let i of versesArray; trackBy: trackByFn"
           (click)="toggleVerse(i)"
-          class="verse-bubble"
+          class="bubble verse-bubble"
           [ngClass]="{
             'not-selected': !isVerseSelected(i),
             'selected': isVerseSelected(i)
@@ -45,20 +44,97 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
       <div class="flex justify-between mt-4">
         <button
           (click)="selectAll()"
-          class="verse-action-button primary"
+          class="action-button primary"
         >
           Select All
         </button>
 
         <button
           (click)="clearAll()"
-          class="verse-action-button secondary"
+          class="action-button secondary"
         >
           Clear All
         </button>
       </div>
     </div>
-  `
+  `,
+  styles: [`
+    .bubble {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .bubble:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .verse-bubble.selected {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: rgb(6, 95, 70);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
+    }
+
+    .verse-bubble.not-selected {
+      background-color: rgba(229, 231, 235, 1);
+      color: rgba(55, 65, 81, 1);
+    }
+
+    .action-button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .action-button.primary {
+      background-color: rgba(59, 130, 246, 1);
+      color: white;
+    }
+
+    .action-button.primary:hover {
+      background-color: rgba(37, 99, 235, 1);
+    }
+
+    .action-button.secondary {
+      background-color: rgba(156, 163, 175, 1);
+      color: white;
+    }
+
+    .action-button.secondary:hover {
+      background-color: rgba(107, 114, 128, 1);
+    }
+
+    .bubbles-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      background-color: rgba(249, 250, 251, 1);
+    }
+
+    .bubbles-container.scrollable {
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    @media (min-width: 768px) {
+      .bubbles-container {
+        gap: 0.75rem;
+      }
+    }
+  `]
 })
 export class VerseSelectorComponent {
   @Input() totalVerses: number = 0;

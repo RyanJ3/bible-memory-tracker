@@ -6,6 +6,7 @@ import { VerseSelectorComponent } from './verse-selector.component';
 
 @Component({
   selector: 'app-chapter-progress',
+  standalone: true,
   imports: [
     VerseSelectorComponent,
     NgClass,
