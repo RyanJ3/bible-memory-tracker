@@ -10,6 +10,7 @@ import {BookSelectorComponent} from './components/book-selector.component';
 import {BookInfoComponent} from './components/book-info.component';
 import {ChapterSelectorComponent} from './components/chapter-selector.component';
 import {ChapterProgressComponent} from './components/chapter-progress.component';
+import {BibleTrackerModule} from "./bible-tracker.module";
 
 @Component({
   selector: 'app-bible-tracker',
@@ -20,7 +21,8 @@ import {ChapterProgressComponent} from './components/chapter-progress.component'
     BookSelectorComponent,
     BookInfoComponent,
     ChapterSelectorComponent,
-    ChapterProgressComponent
+    ChapterProgressComponent,
+    BibleTrackerModule
   ],
   styleUrls: ['./bible-tracker.component.css']
 })
@@ -55,24 +57,6 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(private bibleTrackerService: BibleTrackerService) { }
-
-// Update selection methods
-  ngOnInit(): void {
-    // Get testaments
-    this.testaments = this.bibleTrackerService.getTestaments();
-
-    // Subscribe to progress changes
-    this.bibleTrackerService.progress$
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(progress => {
-          this.progress = progress;
-          this.updateSelections();
-          this.updateBookStatistics();
-        });
-
-    // Set initial selections
-    this.onTestamentChange(this.selectedTestament);
-  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -242,4 +226,21 @@ export class BibleTrackerComponent implements OnInit, OnDestroy {
     }
   }
 
+// Update selection methods
+  ngOnInit(): void {
+    // Get testaments
+    this.testaments = this.bibleTrackerService.getTestaments();
+
+    // Subscribe to progress changes
+    this.bibleTrackerService.progress$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(progress => {
+          this.progress = progress;
+          this.updateSelections();
+          this.updateBookStatistics();
+        });
+
+    // Set initial selections
+    this.onTestamentChange(this.selectedTestament);
+  }
 }

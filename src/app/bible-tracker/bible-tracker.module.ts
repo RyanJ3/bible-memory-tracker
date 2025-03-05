@@ -13,10 +13,7 @@ import { VerseSelectorComponent } from './components/verse-selector.component';
 
 @NgModule({
   declarations: [
-    BibleTrackerComponent,
-    BookInfoComponent,
-    ChapterSelectorComponent,
-    ChapterProgressComponent
+
   ],
   imports: [
     CommonModule,
@@ -24,7 +21,11 @@ import { VerseSelectorComponent } from './components/verse-selector.component';
     TestamentSelectorComponent,
     GroupSelectorComponent,
     BookSelectorComponent,
-    VerseSelectorComponent
+    VerseSelectorComponent,
+    BibleTrackerComponent,
+    BookInfoComponent,
+    ChapterProgressComponent,
+    ChapterSelectorComponent
   ],
   exports: [
     BibleTrackerComponent

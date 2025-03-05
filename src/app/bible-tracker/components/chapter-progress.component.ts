@@ -1,4 +1,4 @@
-// components/chapter-progress.component.ts
+// components/chapter-progress.component.ts - Updated with shared button styles
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BibleBook, ChapterProgress } from '../models';
 import { NgClass, NgIf } from '@angular/common';
@@ -64,16 +64,31 @@ import { VerseSelectorComponent } from './verse-selector.component';
         (versesChange)="onVersesChange($event)"
       ></app-verse-selector>
 
-      <div class="flex justify-end mt-6">
+      <div class="flex justify-between mt-6">
+        <div>
+          <button
+            (click)="incrementVerses()"
+            class="action-button primary mr-2"
+          >
+            + Add Verse
+          </button>
+          <button
+            (click)="decrementVerses()"
+            class="action-button secondary"
+          >
+            - Remove Verse
+          </button>
+        </div>
         <button
           (click)="onResetChapter()"
-          class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded"
+          class="action-button danger"
         >
           Reset Chapter
         </button>
       </div>
     </div>
-  `
+  `,
+  styleUrls: ['../shared-bubble-styles.scss']
 })
 export class ChapterProgressComponent {
   @Input() currentBook: BibleBook | null = null;
