@@ -64,23 +64,7 @@ import { VerseSelectorComponent } from './verse-selector.component';
         (versesChange)="onVersesChange($event)"
       ></app-verse-selector>
 
-      <div class="flex items-center space-x-4 mt-6">
-        <div class="flex space-x-2">
-          <button
-            (click)="decrementVerses()"
-            [disabled]="memorizedCount <= 0"
-            class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-l disabled:opacity-50 font-bold"
-          >
-            -
-          </button>
-          <button
-            (click)="incrementVerses()"
-            [disabled]="memorizedCount >= totalVerses"
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r disabled:opacity-50 font-bold"
-          >
-            +
-          </button>
-        </div>
+      <div class="flex justify-end mt-6">
         <button
           (click)="onResetChapter()"
           class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded"

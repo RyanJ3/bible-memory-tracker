@@ -43,7 +43,7 @@ import {NgClass, NgForOf} from '@angular/common';
             <button
               *ngFor="let chapter of currentBookProgress; trackBy: trackByFn"
               (click)="selectChapter(chapter.chapter)"
-              class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium hover:opacity-80"
+              class="chapter-bubble"
               [ngClass]="{
                 'bg-gray-200 text-gray-800': !chapter.inProgress && !chapter.completed,
                 'bg-blue-100 text-blue-800': chapter.inProgress && !chapter.completed,
@@ -57,7 +57,26 @@ import {NgClass, NgForOf} from '@angular/common';
         </div>
       </div>
     </div>
-  `
+  `,
+  styles: [`
+    .chapter-bubble {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chapter-bubble:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  `]
 })
 export class ChapterSelectorComponent {
   @Input() currentBookProgress: ChapterProgress[] = [];
