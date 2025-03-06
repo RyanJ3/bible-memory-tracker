@@ -11,7 +11,6 @@ import { ChapterSelectorComponent } from './components/chapter-selector.componen
 import { ChapterProgressComponent } from './components/chapter-progress.component';
 import { BibleTrackerModule } from "./bible-tracker.module";
 import {BookInfoComponent} from "./components/book-info.component";
-import {TotalStatsComponent} from "./components/total-stats-component";
 
 @Component({
   selector: 'app-bible-tracker',
@@ -23,8 +22,7 @@ import {TotalStatsComponent} from "./components/total-stats-component";
     BookInfoComponent,
     ChapterSelectorComponent,
     ChapterProgressComponent,
-    BibleTrackerModule,
-    TotalStatsComponent
+    BibleTrackerModule
   ],
   styleUrls: ['./bible-tracker.component.css']
 })

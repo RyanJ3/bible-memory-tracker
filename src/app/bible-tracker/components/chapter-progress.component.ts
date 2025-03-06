@@ -19,7 +19,7 @@ import {ConfirmationModalComponent} from './confirmation-modal';
          class="bg-white border rounded p-4 shadow-sm">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold">
-          {{ currentBook?.bookName }} {{ selectedChapter }}
+          {{ currentBook.bookName }} {{ selectedChapter }}
           <span *ngIf="chapterProgress?.completed" class="ml-2 text-sm bg-green-100 text-green-800 px-2 py-1 rounded">
             Completed
           </span>
