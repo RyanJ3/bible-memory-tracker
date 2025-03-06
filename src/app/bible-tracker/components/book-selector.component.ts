@@ -1,7 +1,7 @@
 // In book-selector.component.ts - Enhanced version
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BibleBook } from '../models';
-import { NgClass, NgFor } from '@angular/common';
+import {NgClass, NgFor, NgIf} from '@angular/common';
 import { BibleTrackerService } from '../bible-tracker-service';
 
 @Component({
@@ -9,7 +9,8 @@ import { BibleTrackerService } from '../bible-tracker-service';
   standalone: true,
   imports: [
     NgClass,
-    NgFor
+    NgFor,
+    NgIf
   ],
   template: `
     <div class="bg-white p-4 rounded shadow mb-6">

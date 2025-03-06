@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
         <h1 class="app-title">Bible App</h1>
         <nav class="app-nav">
           <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-          <a routerLink="/flow-memorization" class="nav-link" routerLinkActive="active">FLOW Memorization</a>
           <a routerLink="/stats" class="nav-link" routerLinkActive="active">Stats</a>
         </nav>
       </header>
