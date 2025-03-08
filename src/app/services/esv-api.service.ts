@@ -64,6 +64,8 @@ export class EsvApiService {
   private cache = new Map<string, CacheEntry>();
   private cacheExpirationMs = 24 * 60 * 60 * 1000; // 24 hours
 
+  constructor(private http: HttpClient) { }
+
   // Default options for ESV API
   private defaultOptions: ESVPassageOptions = {
     'include-passage-references': true,
@@ -80,8 +82,6 @@ export class EsvApiService {
     'indent-poetry': true,
     'line-length': 0
   };
-
-  constructor(private http: HttpClient) { }
 
   /**
    * Set the API key for the ESV API
